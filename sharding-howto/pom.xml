@@ -11,6 +11,7 @@
 	<artifactId>sharding-howto</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>sharding-howto</name>
+	<packaging>pom</packaging>
 	<description>sharding-howto</description>
 
 	<properties>
@@ -18,10 +19,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-	</dependencies>
+
+	<modules>
+		<module>sharding-jdbc-v500</module>
+	</modules>
 </project>
