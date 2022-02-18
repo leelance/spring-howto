@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: jdbc-myabtis-rw
+
+logging:
+  file:
+    path: logs
+    name: ${spring.application.name}.log
+  level:
+    org.springframework: info

@@ -3,7 +3,6 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-node
 
 ### STS ###
 .apt_generated
@@ -20,12 +19,6 @@ node
 *.iml
 *.ipr
 
-.mvn
-mvnw.cmd
-mvnw
-
-logs/
-*.log
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
