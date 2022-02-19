@@ -3,19 +3,18 @@ spring:
     name: jdbc-myabtis-rw
   profiles:
     include: jdbc
-
-mybatis:
-  mapper-locations: classpath*:/mappers/*-mapper.xml
-  type-aliases-package: com.lance.sharding.rw.domain
-  configuration:
-    default-fetch-size: 20
-    default-statement-timeout: 30
-    map-underscore-to-camel-case: true
-    use-generated-keys: true
-
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    database-platform: org.hibernate.dialect.MySQL8Dialect
 
 logging:
   file:
     name: logs/${spring.application.name}.log
   level:
     org.springframework: info
+    com.lance.sharding.rw: debug
