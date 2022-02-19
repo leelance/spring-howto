@@ -1,0 +1,28 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: dsm0,dss0
+      dsm0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_800001?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+      dss0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_800002?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+    rules:
+      readwrite-splitting:
+        data-sources:
+          readwrite_ds:
+            load-balancer-name: round_robin
+            props:
+              read-data-source-names: dss0
+              write-data-source-name: dsm0
+            type: Static
+        load-balancers:
+          round_robin:
+            type: ROUND_ROBIN
