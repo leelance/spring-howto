@@ -1,6 +1,6 @@
 spring:
   application:
-    name: jdbc-myabtis-rw
+    name: jdbc-jpa-rw
   profiles:
     include: jdbc
   jpa:
