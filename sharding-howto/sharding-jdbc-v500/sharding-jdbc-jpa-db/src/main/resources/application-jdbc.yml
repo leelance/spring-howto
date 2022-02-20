@@ -1,0 +1,37 @@
+spring:
+  shardingsphere:
+    datasource:
+      names: ds-0,ds-1
+      ds-0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+      ds-1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_2?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+    rules:
+      sharding:
+        binding-tables:
+          - t_order,t_order_item
+        broadcast-tables: t_address
+        default-database-strategy:
+          standard:
+            sharding-algorithm-name: database-inline
+            sharding-column: user_id
+        sharding-algorithms:
+          database-inline:
+            type: INLINE
+            props:
+              algorithm-expression: ds-$->{user_id % 2}
+        tables:
+          t_order:
+            actual-data-nodes: ds-$->{0..1}.t_order
+          t_order_item:
+            actual-data-nodes: ds-$->{0..1}.t_order_item
+    props:
+      sql-show: true
