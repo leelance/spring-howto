@@ -56,5 +56,6 @@
         <module>sharding-jdbc-jpa-rw</module>
         <module>sharding-jdbc-mybatis-db</module>
         <module>sharding-jdbc-jpa-db</module>
+        <module>sharding-jdbc-mybatis-table</module>
     </modules>
 </project>

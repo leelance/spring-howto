@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lance.sharding.table.mapper.OrderMapper">
+    <insert id="save" parameterType="order">
+        INSERT INTO t_order (order_id, user_id, address_id, status, creator, create_time, updater, update_time)
+        VALUES (#{orderId}, #{userId}, #{addressId}, 1, #{creator}, now(), #{updater}, now())
+    </insert>
+
+    <delete id="delete">
+        DELETE
+        FROM t_order
+        WHERE user_id = #{value}
+    </delete>
+
+    <select id="findAll" resultType="order">
+        SELECT order_id,
+               user_id,
+               address_id,
+               status,
+               creator,
+               create_time,
+               updater,
+               update_time
+        FROM t_order
+    </select>
+</mapper>

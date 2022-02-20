@@ -33,6 +33,5 @@ spring:
             actual-data-nodes: ds-$->{0..1}.t_order
           t_order_item:
             actual-data-nodes: ds-$->{0..1}.t_order_item
-
     props:
       sql-show: true

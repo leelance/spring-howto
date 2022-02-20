@@ -1,0 +1,39 @@
+spring:
+  shardingsphere:
+    datasource:
+      ds:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+      names: ds
+    rules:
+      sharding:
+        binding-tables:
+          - t_order,t_order_item
+        broadcast-tables: t_address
+        sharding-algorithms:
+          t-order-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_$->{order_id % 2}
+          t-order-item-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_item_$->{order_id % 2}
+        tables:
+          t_order:
+            actual-data-nodes: ds.t_order_$->{0..1}
+            table-strategy:
+              standard:
+                sharding-algorithm-name: t-order-inline
+                sharding-column: order_id
+          t_order_item:
+            actual-data-nodes: ds.t_order_item_$->{0..1}
+            table-strategy:
+              standard:
+                sharding-algorithm-name: t-order-item-inline
+                sharding-column: order_id
+    props:
+      sql-show: true

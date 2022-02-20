@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: jdbc-myabtis-table
+  profiles:
+    include: jdbc
+
+mybatis:
+  mapper-locations: classpath*:/mappers/*-mapper.xml
+  type-aliases-package: com.lance.sharding.table.domain
+  configuration:
+    default-fetch-size: 20
+    default-statement-timeout: 30
+    map-underscore-to-camel-case: true
+    use-generated-keys: true
+
+
+logging:
+  file:
+    name: logs/${spring.application.name}.log
+  level:
+    org.springframework: info
+    com.lance.sharding.table: debug
