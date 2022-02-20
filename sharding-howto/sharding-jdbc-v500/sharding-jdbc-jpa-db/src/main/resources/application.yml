@@ -17,4 +17,4 @@ logging:
     name: logs/${spring.application.name}.log
   level:
     org.springframework: info
-    com.lance.sharding.rw: debug
+    com.lance.sharding.db: debug
