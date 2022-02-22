@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ShardingJdbcMybatisTableComplexApplication {
+public class MybatisTableComplexApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ShardingJdbcMybatisTableComplexApplication.class, args);
+		SpringApplication.run(MybatisTableComplexApplication.class, args);
 	}
 
 }
