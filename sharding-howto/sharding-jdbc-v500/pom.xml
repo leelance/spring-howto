@@ -58,5 +58,6 @@
         <module>sharding-jdbc-jpa-db</module>
         <module>sharding-jdbc-mybatis-table</module>
         <module>sharding-jdbc-jpa-table</module>
+        <module>sharding-jdbc-mybatis-table-complex</module>
     </modules>
 </project>
