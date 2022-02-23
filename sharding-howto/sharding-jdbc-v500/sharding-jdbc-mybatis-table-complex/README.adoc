@@ -1,0 +1,18 @@
+== sharding-jdbc
+
+基于sharding-jdbc, mybatis根据订单id和城市多字段分表
+
+----
+<dependencies>
+	<dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+	<dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+</dependencies>
+----

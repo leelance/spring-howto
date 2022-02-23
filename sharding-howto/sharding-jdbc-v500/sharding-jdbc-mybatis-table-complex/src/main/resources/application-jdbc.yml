@@ -18,6 +18,7 @@ spring:
             type: COMPLEX_INLINE
             props:
               algorithm-expression: t_order_$->{city}_$->{order_id % 2}
+              sharding-columns: city,order_id
           t-order-item-inline:
             type: INLINE
             props:

@@ -11,7 +11,7 @@ spring:
     rules:
       sharding:
         binding-tables:
-          - t_order
+          - t_order,t_order_item
         broadcast-tables: t_address
         sharding-algorithms:
           t-order-inline:
@@ -19,13 +19,22 @@ spring:
             props:
               algorithm-expression: t_order_$->{city}_$->{order_id % 2}
               sharding-columns: city,order_id
+          t-order-item-inline:
+            type: INLINE
+            props:
+              algorithm-expression: t_order_item_$->{order_id % 2}
         tables:
           t_order:
             actual-data-nodes: ds.t_order_$->{['shanghai','beijing']}_$->{0..1}
             table-strategy:
               complex:
                 sharding-algorithm-name: t-order-inline
-                sharding-columns: city,order_id
-
+                sharding-columns: city, order_id
+          t_order_item:
+            actual-data-nodes: ds.t_order_item_$->{0..1}
+            table-strategy:
+              standard:
+                sharding-algorithm-name: t-order-item-inline
+                sharding-column: order_id
     props:
       sql-show: true
