@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lance.sharding.complex.mapper.UserMapper">
+	<insert id="save" parameterType="user">
+		INSERT INTO t_user (user_id, username, pwd, status, creator, create_time, updater, update_time)
+		VALUES (#{userId}, #{username}, #{pwd}, 1, #{creator}, now(), #{updater}, now())
+	</insert>
+
+	<delete id="delete">
+		DELETE
+		FROM t_user
+		WHERE user_id = #{value}
+	</delete>
+
+	<select id="findAll" resultType="user">
+		SELECT user_id,
+		       username,
+		       pwd,
+		       status,
+		       creator,
+		       create_time,
+		       updater,
+		       update_time
+		FROM t_user
+	</select>
+</mapper>
