@@ -1,0 +1,17 @@
+== sharding-jdbc
+
+基于sharding-jdbc, JPA, Hint分片算法
+
+----
+<dependencies>
+	<dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+	<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+</dependencies>
+----
