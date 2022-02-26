@@ -3,7 +3,6 @@ package com.lance.sharding.interval.repository;
 import com.lance.sharding.interval.entity.OrderEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.shardingsphere.infra.hint.HintManager;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +15,10 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
 /**
- * order mapper
+ * order repository
  *
  * @author lance
- * @date 2022/2/20 21:16
+ * @date 2022/2/26 16:12
  */
 @Slf4j
 @SpringBootTest
@@ -52,25 +51,20 @@ class OrderRepositoryTests {
   @Test
   @Disabled
   void findOne() {
-    try (HintManager hintManager = HintManager.getInstance()) {
-      hintManager.addTableShardingValue("t_order", CITIES[0]);
-
-      long orderId = 782568039714202L;
-      String city = CITIES[0];
-      OrderEntity orderEntity = orderRepository.findByOrderIdAndCity(orderId, city);
-      log.info("===>{}", orderEntity);
-    }
+    long orderId = 371292483032254L;
+    Date[] dates = create();
+    OrderEntity orderEntity = orderRepository.findByOrderIdAndIntervalTime(orderId, dates[0]);
+    log.info("===>{}", orderEntity);
   }
 
   @Test
   @Disabled
-  void findAll() {
-    try (HintManager hintManager = HintManager.getInstance()) {
-      hintManager.addTableShardingValue("t_order", CITIES[1]);
+  void findByInterval() {
+    Date[] dates = create();
+    List<OrderEntity> list = orderRepository.findByIntervalTime(dates[0]);
 
-      List<OrderEntity> list = orderRepository.findAll();
-      log.info("===>{}", list);
-    }
+    log.info("===>{}", !list.isEmpty() ? list.size() : 0);
+    log.info("===>{}", list);
   }
 
   private Date[] create() {
