@@ -62,5 +62,7 @@
         <module>sharding-jdbc-jpa-table-complex</module>
         <module>sharding-jdbc-mybatis-table-hint</module>
         <module>sharding-jdbc-jpa-table-hint</module>
+        <module>sharding-jdbc-mybatis-table-interval</module>
+        <module>sharding-jdbc-jpa-table-interval</module>
     </modules>
 </project>
