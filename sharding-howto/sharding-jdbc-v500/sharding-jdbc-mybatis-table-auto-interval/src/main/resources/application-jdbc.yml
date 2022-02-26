@@ -15,21 +15,18 @@ spring:
         broadcast-tables: t_address
         sharding-algorithms:
           t-order-inline:
-            type: INTERVAL
+            type: AUTO_INTERVAL
             props:
-              datetime-pattern: 'yyyy-MM-dd HH:mm:ss'
-              datetime-lower: '2022-01-01 00:00:00'
-              datetime-upper: '2030-12-01 00:00:00'
-              sharding-suffix-pattern: 'yyyyMM'
-              datetime-interval-amount: 1
-              datetime-interval-unit: 'months'
+              datetime-lower: '2022-02-01 00:00:00'
+              datetime-upper: '2022-02-06 00:00:00'
+              sharding-seconds: '86400'
           t-order-item-inline:
             type: INLINE
             props:
               algorithm-expression: t_order_item_$->{order_id % 2}
         tables:
           t_order:
-            actual-data-nodes: ds.t_order_$->{202201..203012}
+            actual-data-nodes: ds.t_order_$->{0..5}
             table-strategy:
               standard:
                 sharding-algorithm-name: t-order-inline
