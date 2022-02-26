@@ -1,8 +1,9 @@
 == sharding-jdbc
 
-基于sharding-jdbc, JPA, Interval分片算法
+基于sharding-jdbc, JPA, AUTO_INTERVAL分片算法
 
 === maven依赖
+
 ----
 <dependencies>
 	<dependency>
@@ -21,12 +22,9 @@
 
 ----
 t-order-inline:
-    type: INTERVAL
+    type: AUTO_INTERVAL
     props:
-      datetime-pattern: 'yyyy-MM-dd HH:mm:ss'
-      datetime-lower: '2022-01-01 00:00:00'
-      datetime-upper: '2030-12-01 00:00:00'
-      sharding-suffix-pattern: 'yyyyMM'
-      datetime-interval-amount: 1
-      datetime-interval-unit: 'months'
+      datetime-lower: '2022-02-01 00:00:00'
+      datetime-upper: '2022-02-06 00:00:00'
+      sharding-seconds: '86400'
 ----

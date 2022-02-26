@@ -18,7 +18,7 @@
 </dependencies>
 ----
 
-=== sharding
+=== sharding config
 
 ----
 t-order-inline:
