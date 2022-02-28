@@ -67,5 +67,6 @@
         <module>sharding-jdbc-mybatis-table-auto-interval</module>
         <module>sharding-jdbc-jpa-table-auto-interval</module>
         <module>sharding-jdbc-mybatis-table-boundary-range</module>
+        <module>sharding-jdbc-jpa-table-boundary-range</module>
     </modules>
 </project>
