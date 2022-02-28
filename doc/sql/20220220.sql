@@ -57,6 +57,7 @@ CREATE TABLE `t_order_202201`
 CREATE TABLE `t_order_0`
 (
     `order_id`    bigint NOT NULL AUTO_INCREMENT,
+    `price`       double(12,2) NOT 0 ,
     `user_id`     int    NOT NULL,
     `address_id`  bigint NOT NULL,
     `city`        varchar(32) NULL DEFAULT NULL,
@@ -68,7 +69,6 @@ CREATE TABLE `t_order_0`
     `update_time` datetime NULL DEFAULT NULL,
     PRIMARY KEY (`order_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic
-
 
 CREATE TABLE t_address
 (
