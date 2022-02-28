@@ -13,7 +13,6 @@ mybatis:
     map-underscore-to-camel-case: true
     use-generated-keys: true
 
-
 logging:
   file:
     name: logs/${spring.application.name}.log
