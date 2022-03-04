@@ -55,7 +55,7 @@ class OrderRepositoryTests {
   }
 
   @Test
-    //@Disabled
+  @Disabled
   void findOne() {
     long orderId = 335827518705018L;
     OrderEntity orderEntity = orderRepository.findByOrderIdAndPrice(orderId, 80000L);
