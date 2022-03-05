@@ -12,4 +12,12 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
+
+  /**
+   * find by username
+   *
+   * @param username username
+   * @return user
+   */
+  UserEntity findByUsername(String username);
 }
