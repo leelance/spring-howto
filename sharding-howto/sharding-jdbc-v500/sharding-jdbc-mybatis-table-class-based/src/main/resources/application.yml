@@ -1,6 +1,6 @@
 spring:
   application:
-    name: jdbc-myabtis-based
+    name: jdbc-mybatis-based
   profiles:
     include: jdbc
 
