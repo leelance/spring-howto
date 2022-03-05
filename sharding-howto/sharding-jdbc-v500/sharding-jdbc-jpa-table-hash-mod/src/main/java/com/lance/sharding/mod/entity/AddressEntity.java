@@ -2,6 +2,7 @@ package com.lance.sharding.mod.entity;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -14,13 +15,13 @@ import java.util.Date;
 @Entity
 @Table(name = "t_address")
 public class AddressEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long addressId;
-	private String addressName;
-	private int status;
-	private String creator;
-	private Date createTime;
-	private String updater;
-	private Date updateTime;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private long addressId;
+  private String addressName;
+  private int status;
+  private String creator;
+  private Date createTime;
+  private String updater;
+  private Date updateTime;
 }
