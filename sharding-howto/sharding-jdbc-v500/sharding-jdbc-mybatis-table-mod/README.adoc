@@ -1,0 +1,29 @@
+== sharding-jdbc
+
+基于sharding-jdbc, mybatis, MOD分片算法
+
+=== maven依赖
+
+----
+<dependencies>
+	<dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+	<dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+</dependencies>
+----
+
+=== sharding config
+
+----
+t-order-algorithm:
+    type: MOD
+    props:
+      sharding-count: '6'
+----

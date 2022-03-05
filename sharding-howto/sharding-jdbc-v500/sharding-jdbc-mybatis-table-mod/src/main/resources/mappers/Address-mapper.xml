@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lance.sharding.mod.mapper.AddressMapper">
+    <insert id="save" parameterType="Address">
+        INSERT INTO t_address (address_id, address_name, status, creator, create_time, updater, update_time)
+        VALUES (#{addressId}, #{addressName}, 1, #{creator}, now(), #{updater}, now()
+    </insert>
+
+    <delete id="delete">
+        DELETE
+        FROM t_address
+        WHERE user_id = #{value}
+    </delete>
+
+    <select id="findAll" resultType="Address">
+        SELECT address_id, address_name, status, creator, create_time, updater, update_time
+        FROM t_address
+    </select>
+</mapper>
