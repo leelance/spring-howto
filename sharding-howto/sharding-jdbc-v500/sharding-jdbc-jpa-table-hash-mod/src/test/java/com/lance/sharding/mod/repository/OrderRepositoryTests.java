@@ -10,8 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.text.ParseException;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.IntStream;
 
@@ -57,18 +57,9 @@ class OrderRepositoryTests {
   @Test
   @Disabled
   void findOne() {
-    long orderId = 335827518705018L;
-    OrderEntity orderEntity = orderRepository.findByOrderIdAndPrice(orderId, 80000L);
+    long orderId = 379216929739712L;
+    Optional<OrderEntity> orderEntity = orderRepository.findById(orderId);
     log.info("===>{}", orderEntity);
-  }
-
-  @Test
-  @Disabled
-  void findByPrice() {
-    List<OrderEntity> list = orderRepository.findByPrice(50000L);
-
-    log.info("===>{}", !list.isEmpty() ? list.size() : 0);
-    log.info("===>{}", list);
   }
 
   private Date[] create() {
