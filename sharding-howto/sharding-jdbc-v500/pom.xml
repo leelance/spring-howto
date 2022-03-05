@@ -75,5 +75,6 @@
         <module>sharding-jdbc-mybatis-table-mod</module>
         <module>sharding-jdbc-jpa-table-mod</module>
         <module>sharding-jdbc-mybatis-table-class-based</module>
+        <module>sharding-jdbc-jpa-table-class-based</module>
     </modules>
 </project>
