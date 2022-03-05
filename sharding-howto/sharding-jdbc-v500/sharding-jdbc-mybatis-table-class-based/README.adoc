@@ -1,0 +1,68 @@
+== sharding-jdbc
+
+基于sharding-jdbc, mybatis, CLASS_BASED分片算法
+
+=== maven依赖
+
+----
+<dependencies>
+	<dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+	<dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+</dependencies>
+----
+
+=== sharding config
+
+----
+t-order-algorithm:
+    type: ORDER_HIS
+----
+
+=== sharding custom algorithm
+
+----
+public final class CustomStandardShardingAlgorithm implements StandardShardingAlgorithm<Date> {
+  @Override
+  public String doSharding(Collection<String> collection, PreciseShardingValue<Date> shardingValue) {
+    if (log.isDebugEnabled()) {
+      log.debug("===>collection: {}, shardingVal: {}", collection, shardingValue);
+    }
+
+    for (String each : collection) {
+      Date date = shardingValue.getValue();
+      if (Objects.isNull(date)) {
+        date = new Date();
+      }
+
+      String suffix = DateFormatUtils.format(date, "yyyyMM");
+      if (each.endsWith(suffix)) {
+        return each;
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public Collection<String> doSharding(Collection<String> collection, RangeShardingValue<Date> rangeShardingValue) {
+    return collection;
+  }
+
+  @Override
+  public void init() {
+
+  }
+
+  @Override
+  public String getType() {
+    return "ORDER_HIS";
+  }
+}
+----
