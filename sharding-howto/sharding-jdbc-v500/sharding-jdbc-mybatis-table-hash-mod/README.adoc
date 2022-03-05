@@ -1,6 +1,6 @@
 == sharding-jdbc
 
-基于sharding-jdbc, mybatis, VOLUME_RANGE分片算法
+基于sharding-jdbc, mybatis, HASH_MOD分片算法
 
 === maven依赖
 
@@ -22,10 +22,8 @@
 === sharding config
 
 ----
-  t-order-algorithm:
-    type: VOLUME_RANGE
+t-order-algorithm:
+    type: HASH_MOD
     props:
-      range-lower: '0'
-      range-upper: '100000'
-      sharding-volume: '20000'
+      sharding-count: '6'
 ----
