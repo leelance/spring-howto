@@ -15,11 +15,9 @@ spring:
         broadcast-tables: t_address
         sharding-algorithms:
           t-order-algorithm:
-            type: VOLUME_RANGE
+            type: HASH_MOD
             props:
-              range-lower: '0'
-              range-upper: '100000'
-              sharding-volume: '20000'
+              sharding-count: '6'
           t-order-item-inline:
             type: INLINE
             props:
@@ -30,7 +28,7 @@ spring:
             table-strategy:
               standard:
                 sharding-algorithm-name: t-order-algorithm
-                sharding-column: price
+                sharding-column: order_id
           t_order_item:
             actual-data-nodes: ds.t_order_item_$->{0..1}
             table-strategy:
