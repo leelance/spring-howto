@@ -9,33 +9,25 @@ spring:
         username: root
       names: ds
     rules:
-      sharding:
-        binding-tables:
-          - t_order,t_order_item
-        broadcast-tables: t_address
-        sharding-algorithms:
-          t-order-inline:
-            type: AUTO_INTERVAL
+      encrypt:
+        encryptors:
+          name-encryptor:
             props:
-              datetime-lower: '2022-02-01 00:00:00'
-              datetime-upper: '2022-02-06 00:00:00'
-              sharding-seconds: '86400'
-          t-order-item-inline:
-            type: INLINE
+              aes-key-value: hello@aes.username
+            type: AES
+          pwd-encryptor:
             props:
-              algorithm-expression: t_order_item_$->{order_id % 2}
+              aes-key-value: hello@aes.password
+            type: AES
         tables:
-          t_order:
-            actual-data-nodes: ds.t_order_$->{0..5}
-            table-strategy:
-              standard:
-                sharding-algorithm-name: t-order-inline
-                sharding-column: interval_time
-          t_order_item:
-            actual-data-nodes: ds.t_order_item_$->{0..1}
-            table-strategy:
-              standard:
-                sharding-algorithm-name: t-order-item-inline
-                sharding-column: order_id
+          t_user:
+            columns:
+              pwd:
+                cipher-column: pwd
+                encryptor-name: pwd-encryptor
+              username:
+                cipher-column: username
+                encryptor-name: name-encryptor
     props:
       sql-show: true
+      query-with-cipher-comlum: true
