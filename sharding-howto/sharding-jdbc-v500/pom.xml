@@ -71,5 +71,6 @@
         <module>sharding-jdbc-mybatis-table-volume-range</module>
         <module>sharding-jdbc-jpa-table-volume-range</module>
         <module>sharding-jdbc-mybatis-table-hash-mod</module>
+        <module>sharding-jdbc-jpa-table-hash-mod</module>
     </modules>
 </project>
