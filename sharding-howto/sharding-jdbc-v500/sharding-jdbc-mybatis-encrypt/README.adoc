@@ -1,0 +1,51 @@
+== sharding-jdbc
+
+基于sharding-jdbc, mybatis, 加密算法
+
+* MD5 加密算法
+* AES 加密算法
+* RC4 加密算法
+* SM3 加密算法
+* SM4 加密算法
+
+=== maven依赖
+
+----
+<dependencies>
+	<dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+	<dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>2.2.2</version>
+        </dependency>
+</dependencies>
+----
+
+=== sharding config
+
+----
+   rules:
+      encrypt:
+        encryptors:
+          name-encryptor:
+            props:
+              aes-key-value: hello@aes.username
+            type: AES
+          pwd-encryptor:
+            props:
+              aes-key-value: hello@aes.password
+            type: AES
+        tables:
+          t_user:
+            columns:
+              pwd:
+                cipher-column: pwd
+                encryptor-name: pwd-encryptor
+              username:
+                cipher-column: username
+                encryptor-name: name-encryptor
+----
