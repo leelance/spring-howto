@@ -19,3 +19,4 @@ logging:
   level:
     org.springframework: info
     com.lance.sharding.file: debug
+    org.apache.shardingsphere: debug
