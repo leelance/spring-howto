@@ -1,0 +1,40 @@
+spring:
+  shardingsphere:
+    datasource:
+      ds:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+      names: ds
+    rules:
+      encrypt:
+        encryptors:
+          name-encryptor:
+            props:
+              aes-key-value: hello@aes.username
+            type: AES
+          pwd-encryptor:
+            props:
+              aes-key-value: hello@aes.password
+            type: AES
+        tables:
+          t_user:
+            columns:
+              pwd:
+                cipher-column: pwd
+                encryptor-name: pwd-encryptor
+              username:
+                cipher-column: username
+                encryptor-name: name-encryptor
+    props:
+      sql-show: true
+      query-with-cipher-comlum: true
+    mode:
+      type: Standalone
+      repository:
+        type: File
+        props:
+          path: /Users/lance/home/file
+      overwrite: false
