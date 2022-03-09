@@ -53,5 +53,6 @@
 
 	<modules>
 		<module>sharding-datasource-mybatis</module>
+		<module>sharding-datasource-jpa</module>
 	</modules>
 </project>

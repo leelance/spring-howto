@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: jdbc-db-jpa
+  profiles:
+    include: jdbc
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      naming:
+        implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate.enable_lazy_load_no_trans: true
+
+logging:
+  file:
+    name: logs/${spring.application.name}.log
+  level:
+    org.springframework: info
+    com.lance.sharding.jpa: debug
