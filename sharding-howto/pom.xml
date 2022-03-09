@@ -22,5 +22,6 @@
 
 	<modules>
 		<module>sharding-jdbc-v500</module>
+		<module>sharding-datasource</module>
 	</modules>
 </project>

@@ -1,0 +1,21 @@
+com:
+  multi:
+    db:
+      bbs_1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+      bbs_2:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
+      bbs_3:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        jdbc-url: jdbc:mysql://127.0.0.1:3306/bbs_1?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+        password: li123456
+        username: root
