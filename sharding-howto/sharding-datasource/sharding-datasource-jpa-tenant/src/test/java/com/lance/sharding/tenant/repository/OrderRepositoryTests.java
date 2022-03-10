@@ -29,9 +29,9 @@ public class OrderRepositoryTests {
     //@Disabled
   void save() {
     try {
-      DbContextHolder.set("bbs_1");
+      //DbContextHolder.set("bbs_1");
       //DbContextHolder.set("bbs_2");
-      //DbContextHolder.set("bbs_3");
+      DbContextHolder.set("bbs_3");
       ThreadLocalRandom random = ThreadLocalRandom.current();
 
       IntStream.range(0, 20).forEach(i -> {
