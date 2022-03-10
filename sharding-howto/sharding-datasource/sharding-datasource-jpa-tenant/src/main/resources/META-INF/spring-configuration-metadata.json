@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "name": "com.multi",
+      "type": "com.lance.sharding.tenant.config.prop.CustomDbProperties",
+      "sourceType": "com.lance.sharding.tenant.config.prop.CustomDbProperties"
+    }
+  ],
+  "properties": [
+  ],
+  "hints": []
+}

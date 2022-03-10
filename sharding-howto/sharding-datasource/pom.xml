@@ -54,5 +54,6 @@
 	<modules>
 		<module>sharding-datasource-mybatis</module>
 		<module>sharding-datasource-jpa</module>
+		<module>sharding-datasource-jpa-tenant</module>
 	</modules>
 </project>
