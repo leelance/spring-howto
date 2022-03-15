@@ -62,16 +62,15 @@ class RegisteredClientRepositoryTests {
 				.build();
 
 		RegisteredClient client = RegisteredClient.withId(id)
-				.clientId("8000000011")
+				.clientId("8000000013")
 				.clientIdIssuedAt(Instant.now())
 				.clientSecret("{noop}secret")
 				.clientSecretExpiresAt(Instant.now().plus(Period.ofDays(20)))
-				.clientName("Test有限公司的")
-				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-				.authorizationGrantType(AuthorizationGrantType.PASSWORD)
+				.clientName("Client credentials client_secret_basic有限公司")
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 				.scope("server")
-				.scope("web")
 				.tokenSettings(tokenSettings)
 				.build();
 		registeredClientRepository.save(client);
