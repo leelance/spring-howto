@@ -11,11 +11,8 @@ import java.security.spec.ECPoint;
 import java.security.spec.EllipticCurve;
 
 /**
- * KeyGeneratorUtils
- * l
- *
- * @author lance
- * @date 2022/3/14 23:34
+ * @author Joe Grandja
+ * @since 0.1.0
  */
 final class KeyGeneratorUtils {
 
