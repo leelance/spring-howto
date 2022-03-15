@@ -1,0 +1,22 @@
+== oauth2-authorization-server
+
+Spring Authorization Server该项目取代了Spring Security OAuth提供的授权服务器支持。Spring授权服务器项目由Spring安全团队领导，重点是向Spring社区提供OAuth 2.1授权服务器支持
+
+=== maven依赖
+
+----
+oauth2-authorization-server v0.2.2
+----
+
+=== client_id 使用授权服务器对客户端进行身份验证时使用的身份验证方法
+
+----
+## 基于Post请求
+curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=server&grant_type=client_credentials&client_id=8000000012&client_secret=secret' \
+--header 'Cookie: JSESSIONID=2E0679E3D163F37375BD7E6B80E73AFF'
+
+## 基于Authorization Basic请求
+curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=server&grant_type=client_credentials' \
+--header 'Authorization: Basic ODAwMDAwMDAxMzpzZWNyZXQ=' \
+--header 'Cookie: JSESSIONID=2E0679E3D163F37375BD7E6B80E73AFF'
+----
