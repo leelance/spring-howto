@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
+import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.TokenSettings;
 
 import java.time.Duration;
@@ -50,7 +53,7 @@ class RegisteredClientRepositoryTests {
 
 	@Test
 	@Disabled
-	void save() {
+	void saveBase() {
 		String id = UUID.randomUUID().toString().replaceAll("-", "");
 
 		TokenSettings tokenSettings = TokenSettings.builder()
@@ -72,6 +75,47 @@ class RegisteredClientRepositoryTests {
 				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 				.scope("server")
 				.tokenSettings(tokenSettings)
+				.build();
+		registeredClientRepository.save(client);
+
+		log.info("===>{}", JsonUtils.toJsonString(client));
+	}
+
+	@Test
+	@Disabled
+	void saveJwt() {
+		String id = UUID.randomUUID().toString().replaceAll("-", "");
+
+		TokenSettings tokenSettings = TokenSettings.builder()
+				.reuseRefreshTokens(true)
+				.refreshTokenTimeToLive(Duration.ofDays(7))
+				.accessTokenTimeToLive(Duration.ofHours(8))
+				.idTokenSignatureAlgorithm(SignatureAlgorithm.RS256)
+				.reuseRefreshTokens(false)
+				.build();
+
+		//Jwt jwt = Jwt.withTokenValue("33").build();
+		String clientSecret = "abc123456789";
+		//SecretKeySpec secretKeySpec = new SecretKeySpec(clientSecret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
+		//Jwt jwt = Jwt.withTokenValue(clientSecret).build();
+		NimbusJwtEncoder encoder = new NimbusJwtEncoder(null);
+
+		ClientSettings clientSettings = ClientSettings.builder()
+				.tokenEndpointAuthenticationSigningAlgorithm(MacAlgorithm.HS256)
+				.build();
+
+		RegisteredClient client = RegisteredClient.withId(id)
+				.clientId("8000000014")
+				.clientIdIssuedAt(Instant.now())
+				.clientSecret("{noop}secret")
+				.clientSecretExpiresAt(Instant.now().plus(Period.ofDays(20)))
+				.clientName("Client credentials client_secret_jwt有限公司")
+				.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
+				.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+				.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+				.scope("server")
+				.tokenSettings(tokenSettings)
+				.clientSettings(clientSettings)
 				.build();
 		registeredClientRepository.save(client);
 

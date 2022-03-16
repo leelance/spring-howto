@@ -21,6 +21,10 @@ oauth2-authorization-server v0.2.2
 |2
 |client_secret_post
 |ClientSecretPostAuthenticationConverter
+
+|3
+|client_secret_jwt
+|ClientSecretPostAuthenticationConverter
 |===
 
 ----
