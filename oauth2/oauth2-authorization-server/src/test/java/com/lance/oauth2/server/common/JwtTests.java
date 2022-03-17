@@ -79,7 +79,7 @@ class JwtTests {
   }
 
   /**
-   * 对client_security进行jwt进行签名, jose签名
+   * 对client_secret_jwt进行jwt进行签名, jose签名
    */
   @Test
   @Disabled

@@ -80,6 +80,9 @@ class RegisteredClientRepositoryTests {
     log.info("===>{}", JsonUtils.toJsonString(client));
   }
 
+  /**
+   * client_secret_jwt
+   */
   @Test
   @Disabled
   void saveJwt() {
