@@ -25,6 +25,10 @@ oauth2-authorization-server v0.2.2
 |3
 |client_secret_jwt
 |JwtClientAssertionAuthenticationConverter
+
+|4
+|private_key_jwt
+|JwtClientAssertionAuthenticationConverter
 |===
 
 ----
@@ -39,4 +43,8 @@ curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=serv
 
 ## 基于Authorization client_secret_jwt请求
 curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=server&grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4MDAwMDAwMDE0IiwiYXVkIjoiaHR0cDpcL1wvYXV0aC1zZXJ2ZXI6OTAwMCIsInBhc3N3b3JkIjoiYWJjQDEyMyIsImlzcyI6IjgwMDAwMDAwMTQiLCJleHAiOjE2NDc3MjE1NTYsInVzZXJuYW1lIjoiMTkwMDAwMDAwMDAifQ.w3IA5_qoYtrQmZ4fvdqxOsfIuIJ1rwNIU72b8__o7FE&client_id=8000000014'
+
+## 基于Authorization private_key_jwt(公私钥)请求
+curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=server&grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=eyJraWQiOiI4MDAwMDAwMDE1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI4MDAwMDAwMDE1IiwiYXVkIjoiaHR0cDpcL1wvYXV0aC1zZXJ2ZXI6OTAwMCIsInBhc3N3b3JkIjoiYWJjQDEyMyIsImlzcyI6IjgwMDAwMDAwMTUiLCJleHAiOjE2NDc3ODM5NjIsInVzZXJuYW1lIjoiMTkwMDAwMDAwMDAifQ.O8C_8BRZDceymuFZV_TPs5smTO4X8FPavYx9i-6kyVP-Q-dz-NA4t2Dp1MDe-x0HsNuSuQbdEXX_Cg_mzPfuXr6xcSMdZdiiItPTuYm4WUxzZJ-EtcpmsfvHbnlwP9WDRZg7C873Tu0nflCblpIG5W4lN1SVXnv5Vsqft0Fl9y0M_AWWeRwbQa3xDZp1hoQTz5moK3Z8tTcz8usk3vwBoGUmj1lEjBvgenXfP4bwXw1jFxhCERCFJgWwYnbpSFzzIsBqMmHo4pr9fLvoaA4HxAcvFWkozptYSv18hJa-JpJTDed3phNzAstsME9sPqGFNaPuo3yCfUWzkS7tGaSCQA&client_id=8000000015' \
+--header 'Cookie: JSESSIONID=6F5102DA9F8CE3FCA95E7D899FC5BBAB'
 ----
