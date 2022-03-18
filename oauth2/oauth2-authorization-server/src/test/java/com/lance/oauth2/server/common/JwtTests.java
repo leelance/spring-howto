@@ -161,7 +161,7 @@ class JwtTests {
   @Test
   //@Disabled
   void priKeyJwt() throws Exception {
-    String clientId = "8000000014";
+    String clientId = "8000000015";
     String jwkSetUri = "http://127.0.0.1:9000/uc/resources";
 
     RSAPrivateKey privateKey = PemFile.readPrivateKey(PemFile.dir + "id_rsa");
@@ -201,7 +201,7 @@ class JwtTests {
   @Test
   @Disabled
   void generateJwk() throws Exception {
-    String keyId = "8000000014";
+    String keyId = "8000000015";
     KeyPair keyPair = keyPair();
 
     JWK jwk = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())

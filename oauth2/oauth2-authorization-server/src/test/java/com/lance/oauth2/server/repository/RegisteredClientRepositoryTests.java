@@ -117,4 +117,45 @@ class RegisteredClientRepositoryTests {
 
     log.info("===>{}", JsonUtils.toJsonString(client));
   }
+
+  /**
+   * private_key_jwt
+   */
+  @Test
+  @Disabled
+  void savePriKeyJwt() {
+    String id = UUID.randomUUID().toString().replaceAll("-", "");
+    String jwkSetUri = "http://127.0.0.1:9000/uc/resources";
+
+
+    TokenSettings tokenSettings = TokenSettings.builder()
+        .reuseRefreshTokens(true)
+        .refreshTokenTimeToLive(Duration.ofDays(7))
+        .accessTokenTimeToLive(Duration.ofHours(8))
+        .idTokenSignatureAlgorithm(SignatureAlgorithm.RS256)
+        .reuseRefreshTokens(false)
+        .build();
+
+    ClientSettings clientSettings = ClientSettings.builder()
+        .tokenEndpointAuthenticationSigningAlgorithm(SignatureAlgorithm.RS256)
+        .jwkSetUrl(jwkSetUri)
+        .build();
+
+    RegisteredClient client = RegisteredClient.withId(id)
+        .clientId("8000000015")
+        .clientIdIssuedAt(Instant.now())
+        .clientSecret("")
+        .clientSecretExpiresAt(Instant.now().plus(Period.ofDays(20)))
+        .clientName("Client credentials private_key_jwt有限公司")
+        .clientAuthenticationMethod(ClientAuthenticationMethod.PRIVATE_KEY_JWT)
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+        .scope("server")
+        .tokenSettings(tokenSettings)
+        .clientSettings(clientSettings)
+        .build();
+    registeredClientRepository.save(client);
+
+    log.info("===>{}", JsonUtils.toJsonString(client));
+  }
 }
