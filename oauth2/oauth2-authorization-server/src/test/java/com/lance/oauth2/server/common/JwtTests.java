@@ -6,6 +6,10 @@ import com.nimbusds.jose.JWSSigner;
 import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jose.crypto.RSASSASigner;
+import com.nimbusds.jose.jwk.JWK;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +19,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.*;
 import org.springframework.util.CollectionUtils;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
-import java.security.SecureRandom;
+import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -109,6 +116,122 @@ class JwtTests {
     Jwt jwtDecode = jwtDecoder.decode(token);
 
     log.info("===>{}", jwtDecode.getClaims());
+  }
+
+  /**
+   * 基于公私钥对, 生成jwt
+   */
+  @Test
+  @Disabled
+  void priPubKeyJwt() throws Exception {
+    String clientId = "8000000014";
+
+    KeyPair kp = keyPair();
+    RSAPublicKey publicKey = (RSAPublicKey) kp.getPublic();
+    RSAPrivateKey privateKey = (RSAPrivateKey) kp.getPrivate();
+
+    JWSSigner signer = new RSASSASigner(privateKey);
+    JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        .subject(clientId)
+        .issuer(clientId)
+        .claim("username", "19000000000")
+        .claim("password", "abc@123")
+        .audience("http://auth-server:9000")
+        .expirationTime(new Date(new Date().getTime() + 60 * 60 * 60 * 1000))
+        .build();
+
+    SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.RS256), claimsSet);
+    signedJWT.sign(signer);
+
+    String token = signedJWT.serialize();
+    log.info("===>token: {}", token);
+
+
+    NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withPublicKey(publicKey).signatureAlgorithm(SignatureAlgorithm.RS256).build();
+
+    jwtDecoder.setJwtValidator(createJwtValidator(clientId));
+    Jwt jwtDecode = jwtDecoder.decode(token);
+
+    log.info("===>{}", jwtDecode.getClaims());
+  }
+
+  /**
+   * 对private_key_jwt进行jwt进行签名, jose签名
+   */
+  @Test
+  //@Disabled
+  void priKeyJwt() throws Exception {
+    String clientId = "8000000014";
+    String jwkSetUri = "http://127.0.0.1:9000/uc/resources";
+
+    RSAPrivateKey privateKey = PemFile.readPrivateKey(PemFile.dir + "id_rsa");
+    JWSSigner signer = new RSASSASigner(privateKey);
+    JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        .subject(clientId)
+        .issuer(clientId)
+        .claim("username", "19000000000")
+        .claim("password", "abc@123")
+        .audience("http://auth-server:9000")
+        .expirationTime(new Date(new Date().getTime() + 60 * 60 * 60 * 1000))
+        .build();
+
+    JWSHeader header = new JWSHeader.Builder(JWSAlgorithm.RS256)
+        .keyID(clientId)
+        .build();
+
+    SignedJWT signedJWT = new SignedJWT(header, claimsSet);
+    signedJWT.sign(signer);
+
+    String token = signedJWT.serialize();
+    log.info("===>token: {}", token);
+
+    NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).jwsAlgorithm(SignatureAlgorithm.RS256).build();
+    jwtDecoder.setJwtValidator(createJwtValidator(clientId));
+
+    log.info("===>token to jwt");
+    Jwt jwtDecode = jwtDecoder.decode(token);
+
+    log.info("===>{}", jwtDecode.getClaims());
+  }
+
+  /**
+   * 产生公钥jwk json字符串,
+   * 并产生私钥文件 /Users/lance/home/id_rsa
+   */
+  @Test
+  @Disabled
+  void generateJwk() throws Exception {
+    String keyId = "8000000014";
+    KeyPair keyPair = keyPair();
+
+    JWK jwk = new RSAKey.Builder((RSAPublicKey) keyPair.getPublic())
+        .privateKey((RSAPrivateKey) keyPair.getPrivate())
+        .keyUse(KeyUse.SIGNATURE)
+        .keyID(keyId)
+        .algorithm(JWSAlgorithm.RS256)
+        .build();
+
+    log.info("===>jwk: {}", jwk.toJSONString());
+    writePemFile(jwk.toRSAKey().toPrivateKey(), "RSA PRIVATE KEY", "id_rsa");
+  }
+
+  /**
+   * 生成KeyPair
+   */
+  private KeyPair keyPair() throws NoSuchAlgorithmException {
+    KeyPairGenerator gen = KeyPairGenerator.getInstance("RSA");
+    gen.initialize(2048);
+    return gen.generateKeyPair();
+  }
+
+  /**
+   * 公私钥写文件
+   */
+  private void writePemFile(Key key, String description, String filename) throws Exception {
+    PemFile pemFile = new PemFile(key, description);
+    pemFile.write(filename);
+
+    log.info("{} successfully write in file {}.", description, filename);
   }
 
   private OAuth2TokenValidator<Jwt> createJwtValidator(String clientId) {
