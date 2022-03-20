@@ -1,6 +1,6 @@
 package com.lance.oauth2.server.repository;
 
-import com.lance.oauth2.server.json.JsonUtils;
+import com.lance.oauth2.server.common.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
