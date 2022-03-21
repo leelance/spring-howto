@@ -32,17 +32,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-    OAuth2AccessTokenAuthenticationToken accessTokenAuthentication =
-        (OAuth2AccessTokenAuthenticationToken) authentication;
+    OAuth2AccessTokenAuthenticationToken accessTokenAuthentication = (OAuth2AccessTokenAuthenticationToken) authentication;
 
     OAuth2AccessToken accessToken = accessTokenAuthentication.getAccessToken();
     OAuth2RefreshToken refreshToken = accessTokenAuthentication.getRefreshToken();
     Map<String, Object> additionalParameters = accessTokenAuthentication.getAdditionalParameters();
 
-    OAuth2AccessTokenResponse.Builder builder =
-        OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
-            .tokenType(accessToken.getTokenType())
-            .scopes(accessToken.getScopes());
+    OAuth2AccessTokenResponse.Builder builder = OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
+        .tokenType(accessToken.getTokenType())
+        .scopes(accessToken.getScopes());
     if (accessToken.getIssuedAt() != null && accessToken.getExpiresAt() != null) {
       builder.expiresIn(ChronoUnit.SECONDS.between(accessToken.getIssuedAt(), accessToken.getExpiresAt()));
     }

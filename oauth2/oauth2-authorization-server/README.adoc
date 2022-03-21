@@ -48,3 +48,8 @@ curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=serv
 curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=server&grant_type=client_credentials&client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&client_assertion=eyJraWQiOiI4MDAwMDAwMDE1IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiI4MDAwMDAwMDE1IiwiYXVkIjoiaHR0cDpcL1wvYXV0aC1zZXJ2ZXI6OTAwMCIsInBhc3N3b3JkIjoiYWJjQDEyMyIsImlzcyI6IjgwMDAwMDAwMTUiLCJleHAiOjE2NDc3ODM5NjIsInVzZXJuYW1lIjoiMTkwMDAwMDAwMDAifQ.O8C_8BRZDceymuFZV_TPs5smTO4X8FPavYx9i-6kyVP-Q-dz-NA4t2Dp1MDe-x0HsNuSuQbdEXX_Cg_mzPfuXr6xcSMdZdiiItPTuYm4WUxzZJ-EtcpmsfvHbnlwP9WDRZg7C873Tu0nflCblpIG5W4lN1SVXnv5Vsqft0Fl9y0M_AWWeRwbQa3xDZp1hoQTz5moK3Z8tTcz8usk3vwBoGUmj1lEjBvgenXfP4bwXw1jFxhCERCFJgWwYnbpSFzzIsBqMmHo4pr9fLvoaA4HxAcvFWkozptYSv18hJa-JpJTDed3phNzAstsME9sPqGFNaPuo3yCfUWzkS7tGaSCQA&client_id=8000000015' \
 --header 'Cookie: JSESSIONID=6F5102DA9F8CE3FCA95E7D899FC5BBAB'
 ----
+
+=== 自定义统一发返回结果
+
+* 错误信息处理AuthenticationFailureHandler(CustomAuthenticationFailureHandler)
+* 成功信息处理AuthenticationSuccessHandler(CustomAuthenticationSuccessHandler)
