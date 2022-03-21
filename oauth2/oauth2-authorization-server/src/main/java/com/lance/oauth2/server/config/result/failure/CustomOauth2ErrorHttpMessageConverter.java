@@ -1,4 +1,4 @@
-package com.lance.oauth2.server.config.error;
+package com.lance.oauth2.server.config.result.failure;
 
 import com.lance.oauth2.server.common.result.R;
 import org.springframework.core.ParameterizedTypeReference;

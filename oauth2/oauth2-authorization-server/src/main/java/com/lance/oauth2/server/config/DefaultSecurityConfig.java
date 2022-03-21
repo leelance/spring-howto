@@ -1,6 +1,7 @@
 package com.lance.oauth2.server.config;
 
-import com.lance.oauth2.server.config.error.CustomAuthenticationFailureHandler;
+import com.lance.oauth2.server.config.result.failure.CustomAuthenticationFailureHandler;
+import com.lance.oauth2.server.config.result.success.CustomAuthenticationSuccessHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -34,6 +36,7 @@ public class DefaultSecurityConfig {
     OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer<>();
     authorizationServerConfigurer.tokenEndpoint(endpointConfigurer -> {
       endpointConfigurer.errorResponseHandler(authenticationFailureHandler());
+      endpointConfigurer.accessTokenResponseHandler(authenticationSuccessHandler());
     });
     RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
@@ -60,8 +63,16 @@ public class DefaultSecurityConfig {
   /**
    * custom authentication failure handler
    */
+  private AuthenticationSuccessHandler authenticationSuccessHandler() {
+    log.info("===>Init custom success handler");
+    return new CustomAuthenticationSuccessHandler();
+  }
+
+  /**
+   * custom authentication failure handler
+   */
   private AuthenticationFailureHandler authenticationFailureHandler() {
-    log.info("===>Init authenticationFailureHandler");
+    log.info("===>Init custom failure handler");
     return new CustomAuthenticationFailureHandler();
   }
 
