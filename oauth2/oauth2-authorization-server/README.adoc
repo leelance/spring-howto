@@ -31,6 +31,7 @@ oauth2-authorization-server v0.2.2
 |JwtClientAssertionAuthenticationConverter
 |===
 
+[source,shell script]
 ----
 ## 基于Post请求
 curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=server&grant_type=client_credentials&client_id=8000000012&client_secret=secret' \
@@ -53,3 +54,17 @@ curl --location --request POST 'http://127.0.0.1:9000/uc/oauth2/token?scope=serv
 
 * 错误信息处理AuthenticationFailureHandler(CustomAuthenticationFailureHandler)
 * 成功信息处理AuthenticationSuccessHandler(CustomAuthenticationSuccessHandler)
+
+[source,json5]
+----
+{
+    "code": "400",
+    "success": false,
+    "data": {
+        "errorCode": "invalid_scope",
+        "description": null,
+        "uri": null
+    },
+    "msg": "参数校验失败"
+}
+----
