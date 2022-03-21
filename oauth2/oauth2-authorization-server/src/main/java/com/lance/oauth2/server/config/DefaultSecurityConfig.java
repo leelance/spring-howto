@@ -3,6 +3,8 @@ package com.lance.oauth2.server.config;
 import com.lance.oauth2.server.config.error.CustomAuthenticationFailureHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
@@ -27,6 +29,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class DefaultSecurityConfig {
 
   @Bean
+  @Order(Ordered.HIGHEST_PRECEDENCE)
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     OAuth2AuthorizationServerConfigurer<HttpSecurity> authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer<>();
     authorizationServerConfigurer.tokenEndpoint(endpointConfigurer -> {
