@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lance.oauth2.server.mapper.UserInfoMapper">
+
+    <insert id="save">
+        insert into t_user(user_id,username,password,status,create_id,create_time,update_id,update_time)value
+        (#{userId},#{username},#{password},1,#{createId},now(),#{updateId},now())
+    </insert>
+
+    <select id="findOne" resultType="userInfo">
+        select user_id,username,password,status,create_id,create_time,update_id,update_time
+        from t_user
+        where user_id=#{value}
+    </select>
+
+    <select id="findByUsername" resultType="userInfo">
+        select user_id,username,password,status,create_id,create_time,update_id,update_time
+        from t_user
+        where username=#{value}
+    </select>
+
+    <delete id="deleteOne">
+        delete from t_user where user_id=#{value}
+    </delete>
+</mapper>
