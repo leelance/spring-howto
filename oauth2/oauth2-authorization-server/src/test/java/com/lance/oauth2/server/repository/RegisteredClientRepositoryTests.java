@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
@@ -31,6 +32,8 @@ import java.util.UUID;
 class RegisteredClientRepositoryTests {
   @Autowired
   private RegisteredClientRepository registeredClientRepository;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   @Test
   @Disabled
@@ -70,6 +73,40 @@ class RegisteredClientRepositoryTests {
         .clientSecretExpiresAt(Instant.now().plus(Period.ofDays(20)))
         .clientName("Client credentials client_secret_basic有限公司")
         .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+        .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+        .scope("server")
+        .tokenSettings(tokenSettings)
+        .build();
+    registeredClientRepository.save(client);
+
+    log.info("===>{}", JsonUtils.toJsonString(client));
+  }
+
+  /**
+   * 目前不支持password模型
+   */
+  @Test
+  @Disabled
+  void savePassword() {
+    String id = UUID.randomUUID().toString().replaceAll("-", "");
+    String password = "d1921aa0ca3c1146a01520c04e6caa9e";
+
+    TokenSettings tokenSettings = TokenSettings.builder()
+        .reuseRefreshTokens(true)
+        .refreshTokenTimeToLive(Duration.ofDays(7))
+        .accessTokenTimeToLive(Duration.ofHours(8))
+        .idTokenSignatureAlgorithm(SignatureAlgorithm.RS256)
+        .build();
+
+    RegisteredClient client = RegisteredClient.withId(id)
+        .clientId("8000000016")
+        .clientIdIssuedAt(Instant.now())
+        .clientSecret(passwordEncoder.encode(password))
+        .clientSecretExpiresAt(Instant.now().plus(Period.ofDays(20)))
+        .clientName("Client password client_secret_basic有限公司")
+        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+        .authorizationGrantType(AuthorizationGrantType.PASSWORD)
         .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
         .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
         .scope("server")
