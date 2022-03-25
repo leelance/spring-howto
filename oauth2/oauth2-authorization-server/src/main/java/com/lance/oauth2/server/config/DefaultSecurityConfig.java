@@ -36,6 +36,9 @@ public class DefaultSecurityConfig {
       endpointConfigurer.errorResponseHandler(authenticationFailureHandler());
       endpointConfigurer.accessTokenResponseHandler(authenticationSuccessHandler());
     });
+    authorizationServerConfigurer.oidc(oidcConfigurer -> {
+
+    });
 
     RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
 
