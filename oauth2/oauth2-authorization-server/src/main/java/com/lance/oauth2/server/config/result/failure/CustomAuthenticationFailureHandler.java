@@ -19,13 +19,13 @@ import java.io.IOException;
 
 /**
  * custom authentication failure handler
+ * private final CustomOauth2ErrorHttpMessageConverter customOauth2ErrorHttpMessageConverter = new CustomOauth2ErrorHttpMessageConverter();
  *
  * @author lance
  * @date 2022/3/19 16:30
  */
 @Slf4j
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
-  private final CustomOauth2ErrorHttpMessageConverter customOauth2ErrorHttpMessageConverter = new CustomOauth2ErrorHttpMessageConverter();
   private final HttpMessageConverter<Object> accessTokenHttpResponseConverter = new MappingJackson2HttpMessageConverter();
 
   @Override
