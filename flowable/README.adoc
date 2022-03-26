@@ -275,6 +275,120 @@ management.endpoint.flowable.enabled=true # 是否启用flowable端点。
 |flowable-spring-boot-starter-actuator |提供Spring Boot Actuator所需的依赖
 |===
 
+== 10分钟教程总结
 
+[source,java]
+----
+public class TenMinuteTutorial {
 
+  public static void main(String[] args) {
 
+    // 创建Flowable流程引擎
+    ProcessEngine processEngine = ProcessEngineConfiguration
+      .createStandaloneProcessEngineConfiguration()
+      .buildProcessEngine();
+
+    // 获取Flowable服务
+    RepositoryService repositoryService = processEngine.getRepositoryService();
+    RuntimeService runtimeService = processEngine.getRuntimeService();
+
+    // 部署流程定义
+    repositoryService.createDeployment()
+      .addClasspathResource("FinancialReportProcess.bpmn20.xml")
+      .deploy();
+
+    // 启动流程实例
+    String procId = runtimeService.startProcessInstanceByKey("financialReport").getId();
+
+    // 获取第一个任务
+    TaskService taskService = processEngine.getTaskService();
+    List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup("accountancy").list();
+    for (Task task : tasks) {
+      System.out.println("Following task is available for accountancy group: " + task.getName());
+
+      // 申领任务
+      taskService.claim(task.getId(), "fozzie");
+    }
+
+    // 验证Fozzie获取了任务
+    tasks = taskService.createTaskQuery().taskAssignee("fozzie").list();
+    for (Task task : tasks) {
+      System.out.println("Task for fozzie: " + task.getName());
+
+      // 完成任务
+      taskService.complete(task.getId());
+    }
+
+    System.out.println("Number of tasks for fozzie: "
+            + taskService.createTaskQuery().taskAssignee("fozzie").count());
+
+    // 获取并申领第二个任务
+    tasks = taskService.createTaskQuery().taskCandidateGroup("management").list();
+    for (Task task : tasks) {
+      System.out.println("Following task is available for management group: " + task.getName());
+      taskService.claim(task.getId(), "kermit");
+    }
+
+    // 完成第二个任务并结束流程
+    for (Task task : tasks) {
+      taskService.complete(task.getId());
+    }
+
+    // 验证流程已经结束
+    HistoryService historyService = processEngine.getHistoryService();
+    HistoricProcessInstance historicProcessInstance =
+      historyService.createHistoricProcessInstanceQuery().processInstanceId(procId).singleResult();
+    System.out.println("Process instance end time: " + historicProcessInstance.getEndTime());
+  }
+}
+----
+
+== 历史
+
+历史是记录流程执行过程中发生的事情，并将其永久存储的组件。与运行时数据不同，历史数据在流程实例完成以后仍保存在数据库中
+
+* HistoricProcessInstance保存当前及已结束流程实例的信息
+* HistoricVariableInstance保存流程变量或任务变量的最新值
+* HistoricActivityInstance保存活动（流程中的节点）的一次执行的信息
+* HistoricTaskInstance保存当前与历史（完成及删除的）任务实例的信息
+* HistoricIdentityLink保存任务及流程实例、当前及历史的身份关联的信息
+* HistoricDetail保存与历史流程实例、活动实例或任务实例等有关的多种信息
+
+=== 配置下列历史级别
+
+* one（无）：跳过所有历史的存档。这是流程执行性能最高的配置，但是不会保存任何历史信息
+* activity（活动）：存档所有流程实例与活动实例。在流程实例结束时，将顶级流程实例变量的最新值复制为历史变量实例。但不会存档细节
+* audit（审计）：默认级别。将存档所有流程实例及活动实例，并保持变量值与提交的表单参数的同步，以保证所有通过表单进行的用户操作都可追踪、可审计
+* full（完全）：历史存档的最高级别，因此也最慢。这个级别存储所有audit级别存储的信息，加上所有其他细节（主要是流程变量的更新）
+
+=== 查询历史
+
+可以使用HistoryServiceAPI提供的createHistoricProcessInstanceQuery()、createHistoricVariableInstanceQuery()、createHistoricActivityInstanceQuery()、 getHistoricIdentityLinksForTask()、getHistoricIdentityLinksForProcessInstance()、createHistoricDetailQuery()与createHistoricTaskInstanceQuery()方法，查询全部6种历史实体。
+
+== 身份管理
+
+从Flowable V6起，身份管理（IDM IDentity Management）组件从Flowable引擎模块中抽出，并将其逻辑移至几个不同的模块：flowable-idm-api、flowable-idm-engine、flowable-idm-spring及flowable-idm-engine-configurator。分离IDM主要是因为它并不是Flowable引擎的核心，并且在很多将Flowable引擎嵌入应用的用例中，并不使用或需要这部分身份管理逻辑。
+
+默认情况下，IDM引擎在Flowable引擎启动时初始化并启动。这样身份管理逻辑在Flowable V5中也可以使用。IDM引擎管理自己的数据库表结构及下列实体：
+
+* User与UserEntity，用户信息
+* Group与GroupEntity，组信息
+* MembershipEntity，组中的用户成员
+* Privilege与PrivilegeEntity，权限定义（例如在Flowable Modeler与Flowable Task应用中，用于控制应用界面的访问）
+* PrivilegeMappingEntity，将用户及/或组与权限关联
+* Token与TokenEntity，应用界面程序使用的认证令牌
+
+== Flowable UI应用
+
+Flowable提供了几个web应用，用于演示及介绍Flowable项目提供的功能：
+
+* Flowable IDM: 身份管理应用。为所有Flowable UI应用提供单点登录认证功能，并且为拥有IDM管理员权限的用户提供了管理用户、组与权限的功能
+* Flowable Modeler: 让具有建模权限的用户可以创建流程模型、表单、选择表与应用定义
+* Flowable Task: 运行时任务应用。提供了启动流程实例、编辑任务表单、完成任务，以及查询流程实例与任务的功能
+* Flowable Admin: 管理应用。让具有管理员权限的用户可以查询BPMN、DMN、Form及Content引擎，并提供了许多选项用于修改流程实例、任务、作业等。管理应用通过REST API连接至引擎，并与Flowable Task应用及Flowable REST应用一同部署
+
+所有其他的应用都需要Flowable IDM提供认证。每个应用的WAR文件可以部署在相同的servlet容器（如Apache Tomcat）中，也可以部署在不同的容器中。由于每个应用使用相同的cookie进行认证，因此应用需要运行在相同的域名下。
+
+应用基于Spring Boot 2.0。也就是说WAR文件实际上可以作为独立应用直接运行。参见Spring Boot文档中的可执行的Jar章节。
+
+== Flowable REST
