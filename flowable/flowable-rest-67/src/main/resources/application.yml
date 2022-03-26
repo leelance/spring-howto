@@ -143,6 +143,8 @@ flowable:
       path: /process-api
   process-definition-location-prefix: classpath*:/processes/
   process-definition-location-suffixes:
+    - '**.bpmn20.xml'
+    - '**.bpmn'
 
 #logging
 logging:
