@@ -145,6 +145,7 @@ flowable:
   process-definition-location-suffixes:
     - '**.bpmn20.xml'
     - '**.bpmn'
+  async-executor-activate: true
 
 #logging
 logging:
