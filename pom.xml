@@ -31,6 +31,8 @@
 	<modules>
 		<module>sharding-howto</module>
 		<module>oauth2</module>
+		<module>flowable</module>
+		<module>common</module>
 	</modules>
 
 	<dependencyManagement>
