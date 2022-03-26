@@ -23,8 +23,4 @@ Flowable可以十分灵活地加入你的应用/服务/构架。可以将JAR形�
 
 所有使用Flowable方法的共同点是核心引擎。核心引擎是一组服务的集合，并提供管理与执行业务流程的API。 下面的教程从设置与使用核心引擎的介绍开始。后续章节都建立在之前章节中获取的知识之上。
 
-第一节展示了以最简单的方式运行Flowable的方法：只使用Java SE的标准Java main方法。这里也会介绍许多核心概念与API。
 
-Flowable REST API章节展示了如何通过REST运行及使用相同的API。
-
-Flowable APP章节将介绍直接可用的Flowable UI示例的基本方法。
