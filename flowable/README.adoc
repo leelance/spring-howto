@@ -75,5 +75,206 @@ Flowable的所有数据库表都以ACT_开头。第二部分是说明表用途�
 
 可用于修改流程定义中的部分内容，而不需要重新部署它。例如可以修改流程定义中一个用户任务的办理人设置，或者修改一个服务任务中的类名
 
+== 异常策略
+
+Flowable的异常基类是org.flowable.engine.FlowableException
+
+* FlowableWrongDbException: 当Flowable引擎检测到数据库表结构版本与引擎版本不匹配时抛出
+* FlowableOptimisticLockingException: 当对同一数据实体的并发访问导致数据存储发生乐观锁异常时抛出
+* FlowableClassLoadingException: 当需要载入的类（如JavaDelegate, TaskListener, …​）无法找到，或载入发生错误时抛出
+* FlowableObjectNotFoundException: 当请求或要操作的对象不存在时抛出
+* FlowableIllegalArgumentException: 当调用Flowable API时使用了不合法的参数时抛出。可能是引擎配置中的不合法值，或者是API调用传递的不合法参数，也可能是流程定义中的不合法值
+* FlowableTaskAlreadyClaimedException: 当对已被认领的任务调用taskService.claim(…​)时抛出
+
+== 单元测试
+
+要使用JUnit 4的风格书写单元测试并达成同样的功能，必须使用org.flowable.engine.test.FlowableRule Rule。这样能够通过它的getter获得流程引擎与服务
+[source,java]
+
+----
+public class MyBusinessProcessTest {
+
+  @Rule
+  public FlowableRule FlowableRule = new FlowableRule();
+
+  @Test
+  @Deployment
+  public void ruleUsageExample() {
+    RuntimeService runtimeService = FlowableRule.getRuntimeService();
+    runtimeService.startProcessInstanceByKey("ruleUsage");
+
+    TaskService taskService = FlowableRule.getTaskService();
+    Task task = taskService.createTaskQuery().singleResult();
+    assertEquals("My Task", task.getName());
+
+    taskService.complete(task.getId());
+    assertEquals(0, runtimeService.createProcessInstanceQuery().count());
+  }
+}
+----
+
+== 配置Flowable应用
+
+[source,properties]
+----
+# ===================================================================
+# Common Flowable Spring Boot Properties
+# 通用Flowable Spring Boot参数
+#
+# This sample file is provided as a guideline. Do NOT copy it in its
+# entirety to your own application.	           ^^^
+# 本示例文件只作为指导。请不要直接拷贝至你自己的应用中。
+# ===================================================================
+
+# Core (Process) FlowableProperties
+# 核心（流程）
+flowable.check-process-definitions=true # 是否需要自动部署流程定义。
+flowable.custom-mybatis-mappers= # 需要添加至引擎的自定义Mybatis映射的FQN。
+flowable.custom-mybatis-x-m-l-mappers= # 需要添加至引擎的自定义Mybatis XML映射的路径。
+flowable.database-schema= # 如果数据库返回的元数据不正确，可以在这里设置schema用于检测/生成表。
+flowable.database-schema-update=true # 数据库schema更新策略。
+flowable.db-history-used=true # 是否要使用db历史。
+flowable.deployment-name=SpringBootAutoDeployment # 自动部署的名称。
+flowable.history-level= # 要使用的历史级别。
+flowable.process-definition-location-prefix=classpath*:/processes/ # 自动部署时查找流程的目录。
+flowable.process-definition-location-suffixes=**.bpmn20.xml,**.bpmn # 'processDefinitionLocationPrefix'路径下需要部署的文件的后缀（扩展名）。
+
+# Process FlowableProcessProperties
+# 流程
+flowable.process.definition-cache-limit=-1 # 流程定义缓存中保存流程定义的最大数量。默认值为-1（缓存所有流程定义）。
+flowable.process.enable-safe-xml=true # 在解析BPMN XML文件时进行额外检查。参见 https://www.flowable.org/docs/userguide/index.html#advanced.safe.bpmn.xml 。不幸的是，部分平台（JDK 6，JBoss）上无法使用这个功能，因此如果你所用的平台在XML解析时不支持StaxSource，需要禁用这个功能。
+flowable.process.servlet.load-on-startup=-1 # 启动时加载Process servlet。
+flowable.process.servlet.name=Flowable BPMN Rest API # Process servlet的名字。
+flowable.process.servlet.path=/process-api # Process servelet的context path。
+
+# Process Async Executor
+# 流程异步执行器
+flowable.process.async-executor-activate=true # 是否启用异步执行器。
+flowable.process.async.executor.async-job-lock-time-in-millis=300000 # 异步作业在被异步执行器取走后的锁定时间（以毫秒计）。在这段时间内，其它异步执行器不会尝试获取及锁定这个任务。
+flowable.process.async.executor.default-async-job-acquire-wait-time-in-millis=10000 # 异步作业获取线程在进行下次获取查询前的等待时间（以毫秒计）。只在当次没有取到新的异步作业，或者只取到很少的异步作业时生效。默认值 = 10秒。
+flowable.process.async.executor.default-queue-size-full-wait-time-in-millis=0 # 异步作业（包括定时器作业与异步执行）获取线程在队列满时，等待执行下次查询的等待时间（以毫秒计）。默认值为0（以向后兼容）
+flowable.process.async.executor.default-timer-job-acquire-wait-time-in-millis=10000 # 定时器作业获取线程在进行下次获取查询前的等待时间（以毫秒计）。只在当次没有取到新的定时器作业，或者只取到很少的定时器作业时生效。默认值 = 10秒。
+flowable.process.async.executor.max-async-jobs-due-per-acquisition=1 # （译者补）单次查询的异步作业数量。默认值为1，以降低乐观锁异常的可能性。除非你知道自己在做什么，否则请不要修改这个值。
+flowable.process.async.executor.retry-wait-time-in-millis=500 # ???（译者补不了了）
+flowable.process.async.executor.timer-lock-time-in-millis=300000 # 定时器作业在被异步执行器取走后的锁定时间（以毫秒计）。在这段时间内，其它异步执行器不会尝试获取及锁定这个任务。
+
+
+# CMMN FlowableCmmnProperties
+flowable.cmmn.deploy-resources=true # 是否部署资源。默认值为'true'。
+flowable.cmmn.deployment-name=SpringBootAutoDeployment # CMMN资源部署的名字。
+flowable.cmmn.enable-safe-xml=true # 在解析CMMN XML文件时进行额外检查。参见 https://www.flowable.org/docs/userguide/index.html#advanced.safe.bpmn.xml 。不幸的是，部分平台（JDK 6，JBoss）上无法使用这个功能，因此如果你所用的平台在XML解析时不支持StaxSource，需要禁用这个功能。
+flowable.cmmn.enabled=true # 是否启用CMMN引擎。
+flowable.cmmn.resource-location=classpath*:/cases/ # CMMN资源的路径。
+flowable.cmmn.resource-suffixes=**.cmmn,**.cmmn11,**.cmmn.xml,**.cmmn11.xml # 需要扫描的资源后缀名。
+flowable.cmmn.servlet.load-on-startup=-1 # 启动时加载CMMN servlet。
+flowable.cmmn.servlet.name=Flowable CMMN Rest API # CMMN servlet的名字。
+flowable.cmmn.servlet.path=/cmmn-api # CMMN servlet的context path。
+
+# CMMN Async Executor
+# CMMN异步执行器
+flowable.cmmn.async-executor-activate=true # 是否启用异步执行器。
+flowable.cmmn.async.executor.async-job-lock-time-in-millis=300000 # 异步作业在被异步执行器取走后的锁定时间（以毫秒计）。在这段时间内，其它异步执行器不会尝试获取及锁定这个任务。
+flowable.cmmn.async.executor.default-async-job-acquire-wait-time-in-millis=10000 # 异步作业获取线程在进行下次获取查询前的等待时间（以毫秒计）。只在当次没有取到新的异步作业，或者只取到很少的异步作业时生效。默认值 = 10秒。
+flowable.cmmn.async.executor.default-queue-size-full-wait-time-in-millis=0 # 异步作业（包括定时器作业与异步执行）获取线程在队列满时，等待执行下次查询的等待时间（以毫秒计）。默认值为0（以向后兼容）
+flowable.cmmn.async.executor.default-timer-job-acquire-wait-time-in-millis=1000 # 定时器作业获取线程在进行下次获取查询前的等待时间（以毫秒计）。只在当次没有取到新的定时器作业，或者只取到很少的定时器作业时生效。默认值 = 10秒。
+flowable.cmmn.async.executor.max-async-jobs-due-per-acquisition=1 # （译者补）单次查询的异步作业数量。默认值为1，以降低乐观锁异常的可能性。除非你知道自己在做什么，否则请不要修改这个值。
+flowable.cmmn.async.executor.retry-wait-time-in-millis=500 #（译者补不了了）
+flowable.cmmn.async.executor.timer-lock-time-in-millis=300000 # 定时器作业在被异步执行器取走后的锁定时间（以毫秒计）。在这段时间内，其它异步执行器不会尝试获取及锁定这个任务。
+
+# Content FlowableContentProperties
+flowable.content.enabled=true # 是否启动Content引擎。
+flowable.content.servlet.load-on-startup=-1 # 启动时加载Content servlet。
+flowable.content.servlet.name=Flowable Content Rest API # Content servlet的名字。
+flowable.content.servlet.path=/content-api # Content servlet的context path。
+flowable.content.storage.create-root=true # 如果根路径不存在，是否需要创建？
+flowable.content.storage.root-folder= # 存储content文件（如上传的任务附件，或表单文件）的根路径。
+
+# DMN FlowableDmnProperties
+flowable.dmn.deploy-resources=true # 是否部署资源。默认为'true'。
+flowable.dmn.deployment-name=SpringBootAutoDeployment # DMN资源部署的名字。
+flowable.dmn.enable-safe-xml=true # 在解析DMN XML文件时进行额外检查。参见 https://www.flowable.org/docs/userguide/index.html#advanced.safe.bpmn.xml 。不幸的是，部分平台（JDK 6，JBoss）上无法使用这个功能，因此如果你所用的平台在XML解析时不支持StaxSource，需要禁用这个功能。
+flowable.dmn.enabled=true # 是否启用DMN引擎。
+flowable.dmn.history-enabled=true # 是否启用DMN引擎的历史。
+flowable.dmn.resource-location=classpath*:/dmn/ # DMN资源的路径。
+flowable.dmn.resource-suffixes=**.dmn,**.dmn.xml,**.dmn11,**.dmn11.xml # 需要扫描的资源后缀名。
+flowable.dmn.servlet.load-on-startup=-1 # 启动时加载DMN servlet。
+flowable.dmn.servlet.name=Flowable DMN Rest API # DMN servlet的名字。
+flowable.dmn.servlet.path=/dmn-api # DMN servlet的context path。
+flowable.dmn.strict-mode=true # 如果希望避免抉择表命中策略检查导致失败，可以将本参数设置为false。如果检查发现了错误，会直接返回错误前一刻的中间结果。
+
+# Form FlowableFormProperties
+flowable.form.deploy-resources=true # 是否部署资源。默认为'true'。
+flowable.form.deployment-name=SpringBootAutoDeployment # Form资源部署的名字。
+flowable.form.enabled=true # 是否启用Form引擎。
+flowable.form.resource-location=classpath*:/forms/ # Form资源的路径。
+flowable.form.resource-suffixes=**.form # 需要扫描的资源后缀名。
+flowable.form.servlet.load-on-startup=-1 # 启动时加载Form servlet。
+flowable.form.servlet.name=Flowable Form Rest API # Form servlet的名字。
+flowable.form.servlet.path=/form-api # Form servlet的context path。
+
+# IDM FlowableIdmProperties
+flowable.idm.enabled=true # 是否启用IDM引擎。
+flowable.idm.password-encoder= # 使用的密码编码类型。
+flowable.idm.servlet.load-on-startup=-1 # 启动时加载IDM servlet。
+flowable.idm.servlet.name=Flowable IDM Rest API # IDM servlet的名字。
+flowable.idm.servlet.path=/idm-api # IDM servlet的context path。
+
+# IDM Ldap FlowableLdapProperties
+flowable.idm.ldap.attribute.email= # 用户email的属性名。
+flowable.idm.ldap.attribute.first-name= # 用户名字的属性名。
+flowable.idm.ldap.attribute.group-id= # 用户组ID的属性名。
+flowable.idm.ldap.attribute.group-name= # 用户组名的属性名。
+flowable.idm.ldap.attribute.group-type= # 用户组类型的属性名。
+flowable.idm.ldap.attribute.last-name= # 用户姓的属性名。
+flowable.idm.ldap.attribute.user-id= # 用户ID的属性名。
+flowable.idm.ldap.base-dn= # 查找用户与组的DN（标志名称 distinguished name）。
+flowable.idm.ldap.cache.group-size=-1 # 设置{@link org.flowable.ldap.LDAPGroupCache}的大小。这是LRU缓存，用于缓存用户及组，以避免每次都查询LDAP系统。
+flowable.idm.ldap.custom-connection-parameters= # 用于设置所有没有专用setter的LDAP连接参数。查看 http://docs.oracle.com/javase/tutorial/jndi/ldap/jndi.html 介绍的自定义参数。参数包括配置链接池，安全设置，等等。
+flowable.idm.ldap.enabled=false # 是否启用LDAP IDM 服务。
+flowable.idm.ldap.group-base-dn= # 组查找的DN。
+flowable.idm.ldap.initial-context-factory=com.sun.jndi.ldap.LdapCtxFactory # 初始化上下文工厂的类名。
+flowable.idm.ldap.password= # 连接LDAP系统的密码。
+flowable.idm.ldap.port=-1 # LDAP系统的端口。
+flowable.idm.ldap.query.all-groups= # 查询所有组所用的语句。
+flowable.idm.ldap.query.all-users= # 查询所有用户所用的语句。
+flowable.idm.ldap.query.groups-for-user= # 按照指定用户查询所属组所用的语句
+flowable.idm.ldap.query.user-by-full-name-like= # 按照给定全名查找用户所用的语句。
+flowable.idm.ldap.query.user-by-id= # 按照userId查找用户所用的语句。
+flowable.idm.ldap.search-time-limit=0 # 查询LDAP的超时时间（以毫秒计）。默认值为'0'，即“一直等待”。
+flowable.idm.ldap.security-authentication=simple # 连接LDAP系统所用的'java.naming.security.authentication'参数的值。
+flowable.idm.ldap.server= # LDAP系统的主机名。如'ldap://localhost'。
+flowable.idm.ldap.user= # 连接LDAP系统的用户ID。
+flowable.idm.ldap.user-base-dn= # 查找用户的DN。
+
+# Flowable Mail FlowableMailProperties
+flowable.mail.server.default-from=flowable@localhost # 发送邮件时使用的默认发信人地址。
+flowable.mail.server.host=localhost # 邮件服务器。
+flowable.mail.server.password= # 邮件服务器的登录密码。
+flowable.mail.server.port=1025 # 邮件服务器的端口号。
+flowable.mail.server.use-ssl=false # 是否使用SSL/TLS加密SMTP传输连接（即SMTPS/POPS)。
+flowable.mail.server.use-tls=false # 使用或禁用STARTTLS加密。
+flowable.mail.server.username= # 邮件服务器的登录用户名。如果为空，则不需要登录。
+
+# Actuator
+management.endpoint.flowable.cache.time-to-live=0ms # 缓存响应的最大时间。
+management.endpoint.flowable.enabled=true # 是否启用flowable端点。
+----
+
+== Flowable Starter
+
+|===
+|Starter |描述
+|flowable-spring-boot-starter-cmmn| 提供以独立运行模式启动CMMN引擎的依赖
+|flowable-spring-boot-starter-cmmn-rest | 提供以独立运行模式启动CMMN引擎，并提供其REST API的依赖
+|flowable-spring-boot-starter-dmn| 提供以独立运行模式启动DMN引擎的依赖
+|flowable-spring-boot-starter-dmn-rest| 提供以独立运行模式启动DMN引擎，并提供其REST API的依赖
+|flowable-spring-boot-starter-process| 提供以独立运行模式启动流程引擎的依赖
+|flowable-spring-boot-starter-process-rest| 提供以独立运行模式启动流程引擎，并提供其REST API的依赖
+|flowable-spring-boot-starter |提供启动所有Flowable引擎（流程，CMMN，DMN，Form，Content及IDM）的依赖
+|flowable-spring-boot-starter-rest| 提供启动所有Flowable引擎，并提供其REST API的依赖
+|flowable-spring-boot-starter-actuator |提供Spring Boot Actuator所需的依赖
+|===
+
+
 
 
