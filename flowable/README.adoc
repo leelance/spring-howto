@@ -1,0 +1,30 @@
+= Flowable文档
+:author: lance <lh160@zcsmart.com>
+:revdate: 2022年2月15日
+:revnumber: 1.0.0
+:description: 文档描述
+:toc: left
+:toc-title: 目录
+:toclevels: 3
+:table-caption: 表
+:chapter-label:
+:appendix-caption: 附录
+:sectnums:
+:sectlinks:
+:doctype: book
+ifndef::imagesdir[:imagesdir: img]
+
+[[overview]]
+== 描述
+
+Flowable是一个使用Java编写的轻量级业务流程引擎。Flowable流程引擎可用于部署BPMN 2.0流程定义（用于定义流程的行业XML标准）， 创建这些流程定义的流程实例，进行查询，访问运行中或历史的流程实例与相关数据，等等。这个章节将用一个可以在你自己的开发环境中使用的例子，逐步介绍各种概念与API。
+
+Flowable可以十分灵活地加入你的应用/服务/构架。可以将JAR形式发布的Flowable库加入应用或服务，来嵌入引擎。 以JAR形式发布使Flowable可以轻易加入任何Java环境：Java SE；Tomcat、Jetty或Spring之类的servlet容器；JBoss或WebSphere之类的Java EE服务器，等等。 另外，也可以使用Flowable REST API进行HTTP调用。也有许多Flowable应用（Flowable Modeler, Flowable Admin, Flowable IDM 与 Flowable Task），提供了直接可用的UI示例，可以使用流程与任务。
+
+所有使用Flowable方法的共同点是核心引擎。核心引擎是一组服务的集合，并提供管理与执行业务流程的API。 下面的教程从设置与使用核心引擎的介绍开始。后续章节都建立在之前章节中获取的知识之上。
+
+第一节展示了以最简单的方式运行Flowable的方法：只使用Java SE的标准Java main方法。这里也会介绍许多核心概念与API。
+
+Flowable REST API章节展示了如何通过REST运行及使用相同的API。
+
+Flowable APP章节将介绍直接可用的Flowable UI示例的基本方法。
