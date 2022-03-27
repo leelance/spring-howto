@@ -2,8 +2,8 @@ package com.lance.flowable.web.process;
 
 import com.lance.common.core.result.R;
 import com.lance.flowable.service.process.ProcessInstanceService;
-import com.lance.flowable.web.vo.ProcessDelVo;
-import com.lance.flowable.web.vo.ProcessVo;
+import com.lance.flowable.web.vo.process.ProcessDelVo;
+import com.lance.flowable.web.vo.process.ProcessVo;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.web.bind.annotation.*;

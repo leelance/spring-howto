@@ -1,4 +1,4 @@
-package com.lance.flowable.web.vo;
+package com.lance.flowable.web.vo.process;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;

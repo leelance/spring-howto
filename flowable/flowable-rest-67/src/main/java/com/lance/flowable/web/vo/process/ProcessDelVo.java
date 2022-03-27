@@ -1,4 +1,4 @@
-package com.lance.flowable.web.vo;
+package com.lance.flowable.web.vo.process;
 
 import lombok.Data;
 

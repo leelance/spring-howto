@@ -155,6 +155,8 @@ logging:
   level:
     com.lance.flowable: debug
     org.springframework: info
+    org.flowable.engine.impl.persistence.entity: debug
+    org.flowable.task.service.impl.persistence.entity: debug
 
 
 management:
