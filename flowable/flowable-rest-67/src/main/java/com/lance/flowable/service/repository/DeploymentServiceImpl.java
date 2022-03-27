@@ -4,14 +4,13 @@ import com.lance.common.core.result.PageInfo;
 import com.lance.flowable.web.vo.repository.DeploymentReq;
 import com.lance.flowable.web.vo.repository.DeploymentRes;
 import com.lance.flowable.web.vo.repository.DeploymentResourceRes;
-import com.sun.istack.internal.NotNull;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.DeploymentQuery;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -88,7 +87,7 @@ public class DeploymentServiceImpl implements DeploymentService {
    * @param deploymentId deploymentId
    */
   @Override
-  public void deleteOne(@NotNull String deploymentId) {
+  public void deleteOne(@NonNull String deploymentId) {
     repositoryService.deleteDeployment(deploymentId, false);
   }
 

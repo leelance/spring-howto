@@ -1,0 +1,99 @@
+spring:
+  application:
+    name: flow-ui-67
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/flowable?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    password: li123456
+    username: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 500MB
+
+server:
+  port: 9001
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /flow-ui
+
+# flowable config
+flowable:
+  common:
+    app:
+      security:
+        type: idm
+      role-prefix:
+      idm-admin:
+        user: admin
+        password: 123456
+  idm:
+    ldap:
+      enabled: false
+    app:
+      admin:
+        user-id: admin
+        password: 123456
+        first-name: Test
+        last-name: Administrator
+        email: test-admin@126.com
+  content:
+    storage:
+      root-folder: data/
+      create-root: true
+  process:
+    definition-cache-limit: 512
+    async:
+      executor:
+        default-async-job-acquire-wait-time: PT5S
+        default-timer-job-acquire-wait-time: PT5S
+  cmmn:
+    async:
+      executor:
+        default-async-job-acquire-wait-time: PT5S
+        default-timer-job-acquire-wait-time: PT5S
+  rest:
+    app:
+      authentication-mode: verify-privilege
+  task:
+    app:
+      rest-enabled: true
+  admin:
+    app:
+      security:
+        encryption:
+          credentials-i-v-spec: j8kdO2hejA9lKmm6
+          credentials-secret-spec: 9FGl73ngxcOoJvmL
+
+  form-field-validation-enabled: false
+  experimental:
+    debugger:
+      enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: access-admin
+  health:
+    ldap:
+      enabled: false
+
+
+#logging
+logging:
+  file:
+    path: logs
+    name: ${spring.application.name}
+  level:
+    com.lance.flowable: debug
+    org.springframework: info
+    org.flowable.engine.impl.persistence.entity: debug
+    org.flowable.task.service.impl.persistence.entity: debug
