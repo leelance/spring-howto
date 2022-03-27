@@ -16,7 +16,7 @@ public enum FlowResultCode implements IResultCode {
   /**
    * 流程不存在
    */
-  PROCESS_NOT_FOUND("800001", "流程实例不存在"),
+  PROCESS_NOT_FOUND("800001", "操作对象不存在"),
   ;
   /**
    * code编码

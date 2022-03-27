@@ -3,6 +3,9 @@ package com.lance.flowable.service.repository;
 import com.lance.common.core.result.PageInfo;
 import com.lance.flowable.web.vo.repository.DeploymentReq;
 import com.lance.flowable.web.vo.repository.DeploymentRes;
+import com.lance.flowable.web.vo.repository.DeploymentResourceRes;
+import com.sun.istack.internal.NotNull;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -74,9 +77,32 @@ public class DeploymentServiceImpl implements DeploymentService {
    * @return DeploymentRes
    */
   @Override
-  public DeploymentRes findOne(String deploymentId) {
+  public DeploymentRes findOne(@NonNull String deploymentId) {
     Deployment deployment = query().deploymentId(deploymentId).singleResult();
     return convert(deployment);
+  }
+
+  /**
+   * 删除deployment
+   *
+   * @param deploymentId deploymentId
+   */
+  @Override
+  public void deleteOne(@NotNull String deploymentId) {
+    repositoryService.deleteDeployment(deploymentId, false);
+  }
+
+  /**
+   * 根据id查询deployment资源信息
+   *
+   * @param deploymentId deploymentId
+   * @return List
+   */
+  @Override
+  public List<DeploymentResourceRes> resources(String deploymentId) {
+    Object object = repositoryService.getDeploymentResourceNames(deploymentId);
+    log.info("===>{}", object);
+    return null;
   }
 
   /**
