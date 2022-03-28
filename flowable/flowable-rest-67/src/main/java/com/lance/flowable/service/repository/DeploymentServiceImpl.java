@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.zip.ZipInputStream;
 
 /**
  * deployment service
@@ -89,6 +90,26 @@ public class DeploymentServiceImpl implements DeploymentService {
   @Override
   public void deleteOne(@NonNull String deploymentId) {
     repositoryService.deleteDeployment(deploymentId, false);
+  }
+
+  /**
+   * 发布流程, 通过上传zip bar文件(bpmn20文件)
+   *
+   * @param name     deploymentName
+   * @param tenantId 租户Id
+   * @param category category
+   * @param zis      zip文件流
+   * @return DeploymentRes
+   */
+  @Override
+  public DeploymentRes deploy(String name, String tenantId, String category, ZipInputStream zis) {
+    Deployment deployment = repositoryService.createDeployment()
+        .addZipInputStream(zis)
+        .name(name)
+        .category(category)
+        .tenantId(tenantId).deploy();
+
+    return convert(deployment);
   }
 
   /**

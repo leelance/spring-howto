@@ -6,6 +6,7 @@ import com.lance.flowable.web.vo.repository.DeploymentRes;
 import com.lance.flowable.web.vo.repository.DeploymentResourceRes;
 
 import java.util.List;
+import java.util.zip.ZipInputStream;
 
 /**
  * deployment service
@@ -36,6 +37,17 @@ public interface DeploymentService {
    * @param deploymentId deploymentId
    */
   void deleteOne(String deploymentId);
+
+  /**
+   * 发布流程, 通过上传zip bar文件(bpmn20文件)
+   *
+   * @param name     deploymentName
+   * @param tenantId 租户Id
+   * @param category category
+   * @param zis      zip文件流
+   * @return DeploymentRes
+   */
+  DeploymentRes deploy(String name, String tenantId, String category, ZipInputStream zis);
 
   /**
    * 根据id查询deployment资源信息

@@ -158,7 +158,6 @@ logging:
     org.flowable.engine.impl.persistence.entity: debug
     org.flowable.task.service.impl.persistence.entity: debug
 
-
 management:
   endpoint:
     flowable:

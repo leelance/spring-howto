@@ -17,6 +17,7 @@ public enum FlowResultCode implements IResultCode {
    * 流程不存在
    */
   PROCESS_NOT_FOUND("800001", "操作对象不存在"),
+  UPLOAD_DEPLOY_FAIL("800002", "上传流程模型失败"),
   ;
   /**
    * code编码
