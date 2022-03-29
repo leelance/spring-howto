@@ -15,4 +15,19 @@ public interface Constants {
    * 激活
    */
   String ACTIVATE = "activate";
+  /**
+   * default url
+   */
+  String DEFAULT_URL = "default";
+
+  interface Family {
+    /**
+     * 暂停
+     */
+    String USER_ID = "user";
+    /**
+     * 激活
+     */
+    String GROUP_ID = "group";
+  }
 }

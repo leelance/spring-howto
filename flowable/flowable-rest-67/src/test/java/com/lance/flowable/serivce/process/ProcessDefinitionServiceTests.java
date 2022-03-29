@@ -4,10 +4,7 @@ import com.lance.common.core.json.JsonUtils;
 import com.lance.common.core.result.PageInfo;
 import com.lance.flowable.config.code.Constants;
 import com.lance.flowable.service.process.ProcessDefinitionService;
-import com.lance.flowable.web.vo.process.ProcessDefinitionCategoryReq;
-import com.lance.flowable.web.vo.process.ProcessDefinitionReq;
-import com.lance.flowable.web.vo.process.ProcessDefinitionRes;
-import com.lance.flowable.web.vo.process.ToggleStateReq;
+import com.lance.flowable.web.vo.process.*;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;
 import org.junit.jupiter.api.Disabled;
@@ -16,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * ProcessDefinitionService
@@ -79,5 +77,45 @@ class ProcessDefinitionServiceTests {
     req.setIncludeProcessInstances(true);
     req.setDate(new Date());
     processDefinitionService.toggleState(processDefinitionId, req);
+  }
+
+  @Test
+  @Disabled
+  void getAllCandidate() {
+    String processDefinitionId = "Expense:1:b79bdd5cae7311ec985e42e7ef8243f3";
+    List<IdentityLinkRes> list = processDefinitionService.getAllCandidate(processDefinitionId);
+    log.info("===>{}", JsonUtils.toJsonString(list));
+  }
+
+  @Test
+  @Disabled
+  void addCandidate() {
+    String processDefinitionId = "Expense:1:b79bdd5cae7311ec985e42e7ef8243f3";
+    IdentityLinkReq req = new IdentityLinkReq();
+    req.setUser("kermit");
+    req.setGroupId("sales");
+
+    processDefinitionService.addCandidate(processDefinitionId, req);
+  }
+
+  @Test
+  @Disabled
+  void deleteCandidate() {
+    String processDefinitionId = "Expense:1:b79bdd5cae7311ec985e42e7ef8243f3";
+    String family = Constants.Family.USER_ID;
+    String identityId = "kermit";
+
+    processDefinitionService.deleteCandidate(processDefinitionId, family, identityId);
+  }
+
+  @Test
+  @Disabled
+  void getCandidate() {
+    String processDefinitionId = "Expense:1:b79bdd5cae7311ec985e42e7ef8243f3";
+    String family = Constants.Family.USER_ID;
+    String identityId = "kermit";
+
+    IdentityLinkRes res = processDefinitionService.getCandidate(processDefinitionId, family, identityId);
+    log.info("===>{}", JsonUtils.toJsonString(res));
   }
 }

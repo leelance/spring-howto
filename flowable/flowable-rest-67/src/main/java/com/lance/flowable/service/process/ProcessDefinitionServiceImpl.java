@@ -2,10 +2,7 @@ package com.lance.flowable.service.process;
 
 import com.lance.common.core.result.PageInfo;
 import com.lance.flowable.config.code.Constants;
-import com.lance.flowable.web.vo.process.ProcessDefinitionCategoryReq;
-import com.lance.flowable.web.vo.process.ProcessDefinitionReq;
-import com.lance.flowable.web.vo.process.ProcessDefinitionRes;
-import com.lance.flowable.web.vo.process.ToggleStateReq;
+import com.lance.flowable.web.vo.process.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +10,8 @@ import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.repository.ProcessDefinitionQuery;
+import org.flowable.identitylink.api.IdentityLink;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -111,6 +110,80 @@ public class ProcessDefinitionServiceImpl implements ProcessDefinitionService {
     if (StringUtils.equals(req.getAction(), Constants.ACTIVATE)) {
       repositoryService.activateProcessDefinitionById(processDefinitionId, req.isIncludeProcessInstances(), req.getDate());
     }
+  }
+
+  /**
+   * 8.获取流程定义中的候选人列表
+   *
+   * @param processDefinitionId processDefinitionId
+   * @return list
+   */
+  @Override
+  public List<IdentityLinkRes> getAllCandidate(String processDefinitionId) {
+    List<IdentityLink> list = repositoryService.getIdentityLinksForProcessDefinition(processDefinitionId);
+    return list.stream().map(IdentityLinkRes::convert).collect(Collectors.toList());
+  }
+
+  /**
+   * 9.候选启动器添加到流程定义
+   *
+   * @param processDefinitionId processDefinitionId
+   * @param req                 req
+   */
+  @Override
+  public void addCandidate(String processDefinitionId, IdentityLinkReq req) {
+    if (StringUtils.isNotBlank(req.getUser())) {
+      repositoryService.addCandidateStarterUser(processDefinitionId, req.getUser());
+    }
+
+    if (StringUtils.isNotBlank(req.getGroupId())) {
+      repositoryService.addCandidateStarterGroup(processDefinitionId, req.getGroupId());
+    }
+  }
+
+  /**
+   * 10.从流程定义中删除候选起始者
+   *
+   * @param processDefinitionId The id of the process definition
+   * @param family              Either users or groups, depending on the type of identity link
+   * @param identityId          Either the userId or groupId of the identity to get as candidate starter
+   */
+  @Override
+  public void deleteCandidate(String processDefinitionId, String family, String identityId) {
+    if (family.equals(Constants.Family.GROUP_ID)) {
+      repositoryService.deleteCandidateStarterGroup(processDefinitionId, identityId);
+    }
+
+    if (family.equals(Constants.Family.USER_ID)) {
+      repositoryService.deleteCandidateStarterUser(processDefinitionId, identityId);
+    }
+  }
+
+  /**
+   * 11.从流程定义中获取候选启动器
+   *
+   * @param processDefinitionId The id of the process definition
+   * @param family              Either users or groups, depending on the type of identity link
+   * @param identityId          Either the userId or groupId of the identity to get as candidate starter
+   * @return IdentityLinkRes
+   */
+  @Override
+  public IdentityLinkRes getCandidate(@NonNull String processDefinitionId, String family, @NonNull String identityId) {
+    List<IdentityLink> list = repositoryService.getIdentityLinksForProcessDefinition(processDefinitionId);
+    if (list == null || list.isEmpty()) {
+      return null;
+    }
+
+    if (family.equals(Constants.Family.GROUP_ID)) {
+      IdentityLink identityLink = list.stream().filter(l -> identityId.equals(l.getGroupId())).findFirst().orElse(null);
+      return IdentityLinkRes.convert(identityLink);
+    }
+
+    if (family.equals(Constants.Family.USER_ID)) {
+      IdentityLink identityLink = list.stream().filter(l -> identityId.equals(l.getUserId())).findFirst().orElse(null);
+      return IdentityLinkRes.convert(identityLink);
+    }
+    return null;
   }
 
   /**
