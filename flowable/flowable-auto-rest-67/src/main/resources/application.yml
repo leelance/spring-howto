@@ -1,0 +1,164 @@
+spring:
+  application:
+    name: flow-auto-rest-67
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/flowable?serverTimezone=UTC&useSSL=false&useUnicode=true&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    password: li123456
+    username: root
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 500MB
+
+server:
+  port: 9002
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    context-path: /flow
+
+# flowable config
+flowable:
+  check-process-definitions: true
+  cmmn:
+    async:
+      executor:
+        max-async-jobs-due-per-acquisition: 1
+        async-job-lock-time: 300000
+        default-async-job-acquire-wait-time: 10000
+        default-queue-size-full-wait-time: 0
+        default-timer-job-acquire-wait-time: 1000
+        timer-lock-time: 300000
+    deploy-resources: true
+    deployment-name: SpringBootAutoDeployment
+    enable-safe-xml: true
+    enabled: false
+    resource-location: classpath*:/cases/
+    resource-suffixes:
+    servlet:
+      load-on-startup: -1
+      name: Flowable CMMN Rest API
+      path: /cmmn-api
+  content:
+    enabled: false
+    servlet:
+      load-on-startup: -1
+      name: Flowable Content Rest API
+      path: /content-api
+    storage:
+      create-root: true
+      root-folder:
+  custom-mybatis-mappers:
+  custom-mybatis-x-m-l-mappers:
+  database-schema:
+  database-schema-update: true
+  db-history-used: true
+  deployment-name: SpringBootAutoDeployment
+  dmn:
+    deploy-resources: true
+    deployment-name: SpringBootAutoDeployment
+    enable-safe-xml: true
+    enabled: false
+    history-enabled: false
+    resource-location: classpath*:/dmn/
+    resource-suffixes:
+    servlet:
+      load-on-startup: -1
+      name: Flowable DMN Rest API
+      path: /dmn-api
+    strict-mode: true
+  form:
+    deploy-resources: true
+    deployment-name: SpringBootAutoDeployment
+    enabled: false
+    resource-location: classpath*:/forms/
+    resource-suffixes:
+    servlet:
+      load-on-startup: -1
+      name: Flowable Form Rest API
+      path: /form-api
+  history-level: audit
+  idm:
+    enabled: false
+    ldap:
+      attribute:
+        email:
+        first-name:
+        group-id:
+        group-name:
+        group-type:
+        last-name:
+        user-id:
+      base-dn:
+      cache:
+        group-size: -1
+      custom-connection-parameters:
+      enabled: false
+      group-base-dn:
+      initial-context-factory: com.sun.jndi.ldap.LdapCtxFactory
+      password:
+      port: -1
+      query:
+        all-groups:
+        all-users:
+        groups-for-user:
+        user-by-full-name-like:
+        user-by-id:
+      search-time-limit: 0
+      security-authentication: simple
+      server:
+      user:
+      user-base-dn:
+    password-encoder:
+    servlet:
+      load-on-startup: -1
+      name: Flowable IDM Rest API
+      path: /idm-api
+  mail:
+    server:
+      default-from: flowable@localhost
+      host: localhost
+      password:
+      port: 1025
+      use-ssl: false
+      use-tls: false
+      username:
+  process:
+    async:
+      executor:
+        max-async-jobs-due-per-acquisition: 1
+        async-job-lock-time: 300000
+        default-async-job-acquire-wait-time: 10000
+        default-queue-size-full-wait-time: 0
+        default-timer-job-acquire-wait-time: 10000
+        timer-lock-time: 300000
+    definition-cache-limit: -1
+    enable-safe-xml: true
+    servlet:
+      load-on-startup: -1
+      name: Flowable BPMN Rest API
+      path: /process-api
+  process-definition-location-prefix: classpath*:/processes/
+  process-definition-location-suffixes:
+    - '**.bpmn20.xml'
+    - '**.bpmn'
+  async-executor-activate: true
+
+#logging
+logging:
+  file:
+    path: logs
+    name: ${spring.application.name}
+  level:
+    com.lance.flowable: debug
+    org.springframework: info
+    org.flowable.engine.impl.persistence.entity: debug
+    org.flowable.task.service.impl.persistence.entity: debug
+
+management:
+  endpoint:
+    flowable:
+      enabled: true

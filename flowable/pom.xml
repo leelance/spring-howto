@@ -23,5 +23,6 @@
     <modules>
         <module>flowable-rest-67</module>
         <module>flowable-ui-67</module>
+        <module>flowable-auto-rest-67</module>
     </modules>
 </project>
