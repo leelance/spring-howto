@@ -71,6 +71,12 @@ Flowable的所有数据库表都以ACT_开头。第二部分是说明表用途�
 * act_ru_variable: 运行时流程变量数据表，存储运行中的流程各节点的变量信息
 
 == 流程引擎API与服务
+* /process-api for the Process Engine REST endpoints
+* /cmmn-api for the Case Engine REST endpoints
+* /dmn-api for the Decision Engine REST endpoints
+* /idm-api for the Identity Management Engine REST endpoints
+* /form-api for the Form Engine REST endpoints
+* /content-api for the Content Engine REST endpoints
 
 === RepositoryService
 
